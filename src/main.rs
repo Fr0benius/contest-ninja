@@ -100,6 +100,7 @@ async fn main() {
     let args = Args::parse();
     match args.cmd {
         Cmd::Download { port } => {
+            info!("Listening for contest problems on port {}...", port);
             let addr = SocketAddr::from(([127, 0, 0, 1], port));
             let make_svc =
                 make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(listen)) });

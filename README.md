@@ -6,11 +6,13 @@ This is a program to automate some of the annoying things you need to do while t
 
 ## Installation
 - Installation requires the Rust package manager, `cargo`. To install, follow the directions [here](https://www.rust-lang.org/tools/install).
-- `git clone git@github.com:Fr0benius/contest-ninja.git`
+- `git clone https://github.com/Fr0benius/contest-ninja.git`
+- `cd contest-ninja`
 - `cargo install --path .`
-- `contest-ninja -h`
+- `contest-ninja -h` (to make sure executable is visible)
 - If your shell can't find the executable, make sure `~/.cargo/bin` is in your `PATH`.
-- The test case downloader requires the [Competitive Companion](https://github.com/jmerle/competitive-companion) browser extension. 
+- Remove the source repo (or keep it, if you want to mess around with the code!): `cd ..; rm -rf contest-ninja`
+- The test case downloader requires the [Competitive Companion](https://github.com/jmerle/competitive-companion) browser extension. If you want to automatically download problem tests, install it in your favorite browser.
 
 
 ## Usage
@@ -24,7 +26,7 @@ This is a program to automate some of the annoying things you need to do while t
 - The the way the tool figures out the short problem name is by taking the first word in the "name" field. This works well for sides like Codeforces and AtCoder, which have single-letter problem names. For others, YMMV.
 
 ### Running tests
-- The format is `contest-ninja path/to/executable problem_name`
+- The format is `contest-ninja test path/to/executable problem_name`
 - For example, if you are testing problem `A`, with test-cases `A-1.in` and `A-2.in`, and the compiled executable is `run`, the invocation is `contest-ninja ./run A`
 - You may add extra `A-*.in` and `A-*.out` pairs and the tool will test them as well.
 
@@ -35,6 +37,7 @@ This tool is in an extremely early stage. Some ideas for other features/improvem
 - Allow configuration options:
   - Instead of dumping files in the current directory, add the option to find the directory for the particular contest
   - Configurable default for executable name
+  - Put test case inputs and outputs in a single file. This would make it easier to add new tests.
 - Instead of depending on the Competitive Companion extension, directly query the contest servers.
 - Tool can compile problem solutions instead of requiring an existing executable
 - Stress testing: given a wrong solution, slow solution, and a generator - find a failing test case (and add it to the problem's test suite)
