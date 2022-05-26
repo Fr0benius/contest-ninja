@@ -1,15 +1,14 @@
 mod tester;
 
 use clap::Parser;
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Request, Response, Server};
 use log::{error, info};
 use serde::Deserialize;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::str;
-// use serde_json::{Value};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Request, Response, Server};
 
 #[derive(Debug, Deserialize)]
 struct TestCase {
@@ -20,7 +19,9 @@ struct TestCase {
 #[derive(Debug, Deserialize)]
 struct Problem {
     name: String,
+    #[allow(unused)]
     group: String,
+    #[allow(unused)]
     url: String,
     tests: Vec<TestCase>,
 }

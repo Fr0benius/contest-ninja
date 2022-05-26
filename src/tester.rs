@@ -1,17 +1,21 @@
 use glob::glob;
-// use log::{error, info};
+use itertools::{EitherOrBoth::*, Itertools};
 use std::fs::File;
 use std::io::{BufReader, Read};
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::str::from_utf8;
 
-// Compares two test outputs line by line, ignoring trailing whitespace.
+// Compares two test outputs line by line, ignoring leading and trailing whitespace.
 fn compare_lenient(left: &str, right: &str) -> bool {
     left.lines()
         .map(|s| s.trim())
-        .zip(right.lines().map(|s| s.trim()))
-        .all(|(l, r)| l == r)
+        .zip_longest(right.lines().map(|s| s.trim()))
+        .all(|res| match res {
+            Both(l, r) => l == r,
+            Left(l) => l.is_empty(),
+            Right(r) => r.is_empty(),
+        })
 }
 
 fn test_single_case(
@@ -88,4 +92,30 @@ pub fn test_run(exec_path: PathBuf, short_name: &str) -> std::io::Result<()> {
         println!("Congratulations! All tests passed.");
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod test {
+
+    use super::*;
+    #[test]
+    fn test_lenient_comparison() {
+        let expected = "5\n1 2 3\n4 5 6";
+
+        assert!(compare_lenient(expected, "5\n1 2 3\n4 5 6"));
+        assert!(!compare_lenient(expected, "5\n1 2 3\n4 4 6"));
+
+        // Ignore leading/trailing whitespace
+        assert!(compare_lenient(expected, "5\n 1 2 3   \n 4 5 6    "));
+        // For now, do NOT ignore interior whitespace
+        assert!(!compare_lenient(expected, "5\n1 2   3\n4 5 6"));
+
+        // Ignore empty line if it's the last one
+        assert!(compare_lenient(expected, "5\n1 2 3\n4 5 6\n"));
+
+        // Fail if output ends early
+        assert!(!compare_lenient(expected, "5\n1 2 3"));
+        // Fail if too much output
+        assert!(!compare_lenient(expected, "5\n1 2 3\n4 5 6\n7"));
+    }
 }

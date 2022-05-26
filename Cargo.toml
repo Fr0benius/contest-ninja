@@ -13,5 +13,6 @@ serde = { version = "1", features = ["derive"] }
 clap = { version = "3.1.18", features = ["derive"] }
 glob = "0.3"
 log = "0.4"
+itertools = "0.8"
 simple_logger = "2.1"
 serde_json = "1"
